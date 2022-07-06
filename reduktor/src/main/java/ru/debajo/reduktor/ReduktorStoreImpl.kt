@@ -21,7 +21,7 @@ internal class ReduktorStoreImpl<State : Any, Event : Any, News : Any>(
     private val stateFlow: MutableStateFlow<State> = MutableStateFlow(initialState)
     private val eventsFlow: MutableSharedFlow<Event> = MutableSharedFlow(replay = 1)
     private val newsFlow: MutableSharedFlow<News> = MutableSharedFlow(replay = 1)
-    private val commandsFlow: MutableSharedFlow<Command> = MutableSharedFlow(replay = 1)
+    private val commandsFlow: MutableSharedFlow<Command> = MutableSharedFlow(replay = Int.MAX_VALUE)
     private val dispatcher: CoroutineDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val errorHandler = CoroutineExceptionHandler { _, exception -> errorDispatcher(exception) }
 
