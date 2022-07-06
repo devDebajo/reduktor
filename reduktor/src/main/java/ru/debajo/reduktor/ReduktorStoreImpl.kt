@@ -1,6 +1,7 @@
 package ru.debajo.reduktor
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
 import java.util.concurrent.Executors
 
@@ -35,10 +36,11 @@ internal class ReduktorStoreImpl<State : Any, Event : Any, News : Any>(
                 .collect { handleAkt(it) }
         }
 
-        launch(Dispatchers.IO + errorHandler) {
+        launch(dispatcher + errorHandler) {
             commandProcessors
                 .asFlow()
                 .flatMapMerge { it.invoke(commandsFlow) }
+                .flowOn(IO)
                 .map { commandResultReduktor(stateFlow.value, it) }
                 .collect { handleAkt(it) }
         }
